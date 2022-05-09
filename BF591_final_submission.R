@@ -135,6 +135,7 @@ server <- function(input, output) {
     make_summary <- reactive ({
         req(input$meta)
         metadata_df <- load_meta()
+        # section between these comments is for generating numerics from character fields containing numerical data
         RIN <- as.numeric(substring(metadata_df$characteristics_ch1.4, first=6))
         PMI <- as.numeric(substring(metadata_df$characteristics_ch1.2, first=6))
         diag <- substring(metadata_df$characteristics_ch1.1, first = 12)
@@ -154,6 +155,7 @@ server <- function(input, output) {
         mean_age <- format(round(mean(age), 2), nsmall = 2) 
         sd_age <- format(round(sd(age), 2), nsmall = 2)
         unique_diag <- unique(diag)
+        # end of previous comment
         RIN_string <- paste(as.character(mean_RIN), as.character(sd_RIN), sep=" +/- ", collapse=NULL)
         PMI_string <- paste(as.character(mean_PMI), as.character(sd_PMI), sep=" +/- ", collapse=NULL)
         age_string <- paste(as.character(mean_age), as.character(sd_age), sep=" +/- ", collapse=NULL)
@@ -276,6 +278,7 @@ server <- function(input, output) {
         counts_df <- load_counts()
         filter_df <- filter_counts()
         counts_df$variance <- apply(counts_df, 1, var, na.rm=TRUE)
+        # need to subset dataframes because I added the variance field
         counts_df$row_median = apply(counts_df[,1:69], 1, median)
         filter_df$row_median = apply(filter_df[,1:69], 1, median)
         filterpass_genes <- row.names(filter_df)
@@ -336,6 +339,7 @@ server <- function(input, output) {
         return(plot)
     })
     
+    # tried to make heatmap bigger for better visualization, didn't really help
     output$heatmap <- renderPlot({
         make_heatmap()}, height = 400, width = 600
     )
